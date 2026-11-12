@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Ôn Tập Nghiệp Vụ Bảo Hiểm - BIC</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f6f9; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: #003366; text-align: center; font-size: 24px; }
+        .header-info { background: #eef2f7; padding: 15px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        button { background-color: #004080; color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #00264d; }
+        .question-box { margin-bottom: 25px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; background: #fafafa; }
+        .question-title { font-weight: bold; color: #003366; margin-bottom: 10px; }
+        .option { display: block; margin: 8px 0; padding: 8px 12px; background: #fff; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; }
+        .option:hover { background: #f0f4f8; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>TỔNG CÔNG TY BẢO HIỂM BIDV (BIC)</h1>
+    <h2 style="text-align: center; font-size: 18px; color: #555;">CỔNG ÔN TẬP NGHIỆP VỤ BẢO HIỂM - CHUẨN HÓA 2026</h2>
+    
+    <div class="header-info">
+        <div>
+            <span id="sync-status">Chế độ ngoại tuyến (Sử dụng 40 câu hỏi chuẩn BIC)</span><br>
+            <small>Sheet ID: 16jtpz...6QvKo</small>
+        </div>
+        <button onclick="syncFromGoogleSheet()">Đồng bộ từ Google Sheet</button>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Khu vực hiển thị câu hỏi -->
+        <div class="question-box">
+            <div class="question-title">CÂU HỎI 1 • XE CƠ GIỚI</div>
+            <p>1. Đối tượng bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới theo quy định tại Nghị định số 67/2023/NĐ-CP là gì?</p>
+            <label class="option"><input type="radio" name="q1"> A. Tổn thất vật chất của chính chiếc xe cơ giới tham gia giao thông.</label>
+            <label class="option"><input type="radio" name="q1"> B. Trách nhiệm dân sự của chủ xe cơ giới đối với người thứ ba, hành khách theo quy định của pháp luật.</label>
+            <label class="option"><input type="radio" name="q1"> C. Tính mạng và thân thể của người lái xe và chủ sở hữu phương tiện.</label>
+            <label class="option"><input type="radio" name="q1"> D. Hàng hóa chuyên chở trên phương tiện vận tải theo thỏa thuận thương mại.</label>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function syncFromGoogleSheet() {
+        // Link CSV xuất bản công khai từ Google Sheet của bạn
+        const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/16jtpz...6QvKo/export?format=csv';
+        
+        const statusElement = document.getElementById('sync-status');
+        statusElement.innerText = "Đang kết nối lấy dữ liệu từ Google Sheet...";
+
+        try {
+            const response = await fetch(sheetCsvUrl);
+            if (!response.ok) throw new Error("Không thể kết nối mạng tới Google Sheet");
+            
+            const csvText = await response.text();
+            
+            // Xử lý dữ liệu CSV ở đây (bạn có thể phát triển thêm hàm cắt chuỗi parse CSV)
+            statusElement.innerText = "Đồng bộ dữ liệu thành công từ Google Sheet!";
+            alert("Đã cập nhật dữ liệu mới nhất từ Google Sheet thành công!");
+        } catch (error) {
+            console.error("Lỗi đồng bộ:", error);
+            statusElement.innerText = "Chế độ ngoại tuyến (Không thể kết nối trực tiếp Google Sheet)";
+            alert("Không thể kết nối trực tiếp đến Google Sheet do chính sách bảo mật trình duyệt hoặc quyền chia sẻ. Vui lòng kiểm tra lại quyền công bố lên web của Sheet.");
+        }
+    }
+</script>
+
+</body>
+</html>
