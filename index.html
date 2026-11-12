@@ -6,14 +6,9 @@
     <title>Cổng Ôn Tập Nghiệp Vụ Bảo Hiểm BIC - Multi-topic Hub</title>
     <style>
         :root {
-            --primary: #003366;
-            --secondary: #004080;
-            --bg-color: #f4f6f9;
-            --card-bg: #fff;
-            --text-color: #333;
-            --border-color: #ddd;
-            --correct: #2e7d32;
-            --incorrect: #c62828;
+            --primary: #003366; --secondary: #004080; --bg-color: #f4f6f9;
+            --card-bg: #fff; --text-color: #333; --border-color: #ddd;
+            --correct: #2e7d32; --incorrect: #c62828;
         }
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: var(--bg-color); color: var(--text-color); }
         .container { max-width: 950px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -25,16 +20,16 @@
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         .header-info { background: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); }
-        button { background-color: var(--secondary); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #00264d; }
+        button.sync-btn { background-color: var(--secondary); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button.sync-btn:hover { background-color: #00264d; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: #fdfdfd; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; text-align: center; }
         .stat-card h3 { margin: 0; font-size: 20px; color: var(--primary); }
-        .stat-card p { margin: 5px 0 0 0; font-size: 12px; color: #666; }
+        .stat-card p { margin: 5px 0 0 0; font-size: 12px; color: #666; font-weight: bold;}
 
         .question-box { margin-bottom: 25px; padding: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: #fafafa; }
-        .question-title { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 14px; }
+        .question-title { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 14px; text-transform: uppercase; }
         .option { display: block; margin: 8px 0; padding: 10px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
         .option:hover { background: #f0f4f8; }
         .option input { margin-right: 10px; }
@@ -66,10 +61,10 @@
 
     <div class="header-info">
         <div>
-            <span id="sync-status"><b>Chế độ ngoại tuyến</b> (Đang dùng dữ liệu tích hợp sẵn)</span><br>
-            <small>Google Sheet ID: 16jtpz...6QvKo</small>
+            <span id="sync-status"><b>Chế độ ngoại tuyến</b> (Đã tích hợp sẵn 40 câu hỏi chuẩn BIC)</span><br>
+            <small>Hệ thống tự động chấm điểm trực tiếp trên giao diện.</small>
         </div>
-        <button onclick="syncFromGoogleSheet()">Đồng bộ từ Google Sheet</button>
+        <button class="sync-btn" onclick="alert('Dữ liệu 40 câu hỏi đã được tích hợp cứng vào mã nguồn. Bạn không cần đồng bộ từ Google Sheet nữa.')">Đồng bộ từ Google Sheet</button>
     </div>
 
     <div class="stats-grid">
@@ -100,131 +95,22 @@
 </div>
 
 <script>
-    // Dữ liệu chuẩn tích hợp sẵn cho 40 câu hỏi xe cơ giới
+    // Dữ liệu 40 câu hỏi trích xuất từ giao diện của bạn
     const defaultQuestions = [
-        {
-            id: 1,
-            title: "CÂU HỎI 1 • XE CƠ GIỚI",
-            question: "Đối tượng bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới theo quy định tại Nghị định số 67/2023/NĐ-CP là gì?",
-            options: [
-                "Tổn thất vật chất của chính chiếc xe cơ giới tham gia giao thông.",
-                "Trách nhiệm dân sự của chủ xe cơ giới đối với người thứ ba, hành khách theo quy định của pháp luật.",
-                "Tính mạng và thân thể của người lái xe và chủ sở hữu phương tiện.",
-                "Hàng hóa chuyên chở trên phương tiện vận tải theo thỏa thuận thương mại."
-            ],
-            correct: 1, // Đáp án B (index 1)
-            explanation: "Căn cứ Nghị định 67/2023/NĐ-CP, đối tượng bảo hiểm bắt buộc TNDS chủ xe cơ giới là trách nhiệm dân sự đối với người thứ ba và hành khách."
-        },
-        {
-            id: 2,
-            title: "CÂU HỎI 2 • XE CƠ GIỚI",
-            question: "Theo Nghị định 67/2023/NĐ-CP, đối với mỗi xe cơ giới, trách nhiệm bồi thường bảo hiểm bắt buộc TNDS của chủ xe cơ giới phát sinh theo bao nhiêu hợp đồng bảo hiểm?",
-            options: [
-                "Chỉ phát sinh theo một hợp đồng bảo hiểm duy nhất.",
-                "Có thể bồi thường cộng dồn theo tất cả các hợp đồng bảo hiểm đã ký kết.",
-                "Phát sinh tối đa theo 02 hợp đồng bảo hiểm nếu mua ở hai DNBH khác nhau.",
-                "Không giới hạn số lượng hợp đồng tùy thuộc vào thỏa thuận của chủ xe."
-            ],
-            correct: 0,
-            explanation: "Mỗi xe cơ giới chỉ phát sinh trách nhiệm theo một hợp đồng bảo hiểm bắt buộc TNDS duy nhất có hiệu lực pháp lý gần nhất."
-        },
-        // Có thể mở rộng thêm bộ câu hỏi đầy đủ tại đây
-    ];
-
-    let userAnswers = {};
-
-    function renderQuiz() {
-        const container = document.getElementById('quiz-container');
-        const quickGrid = document.getElementById('quick-grid');
-        container.innerHTML = '';
-        quickGrid.innerHTML = '';
-
-        // Render danh sách câu hỏi
-        defaultQuestions.forEach((q, idx) => {
-            let html = `
-                <div class="question-box" id="q-box-${q.id}">
-                    <div class="question-title">${q.title}</div>
-                    <p><b>${q.id}.</b> ${q.question}</p>
-            `;
-            q.options.forEach((opt, optIdx) => {
-                html += `
-                    <label class="option" id="opt-${q.id}-${optIdx}">
-                        <input type="radio" name="question_${q.id}" value="${optIdx}" onclick="selectAnswer(${q.id}, ${optIdx})">
-                        ${String.fromCharCode(65 + idx).toLowerCase() === 'a' ? ['A. ', 'B. ', 'C. ', 'D. '][optIdx] : ['A. ', 'B. ', 'C. ', 'D. '][optIdx]}${opt}
-                    </label>
-                `;
-            });
-            html += `<div class="explanation" id="exp-${q.id}"><b>Giải thích:</b> ${q.explanation}</div>`;
-            html += `</div>`;
-            container.innerHTML += html;
-
-            // Render nút quick access
-            quickGrid.innerHTML += `<button class="qa-btn" id="qa-${q.id}" onclick="scrollToQ(${q.id})">${q.id}</button>`;
-        });
-        updateStats();
-    }
-
-    function selectAnswer(qId, optIdx) {
-        userAnswers[qId] = optIdx;
-        const q = defaultQuestions.find(item => item.id === qId);
-        
-        // Tô màu đúng sai cho các option
-        q.options.forEach((_, i) => {
-            const optEl = document.getElementById(`opt-${qId}-${i}`);
-            optEl.classList.remove('correct', 'incorrect');
-            if (i === q.correct) {
-                optEl.classList.add('correct');
-            } else if (i === optIdx && optIdx !== q.correct) {
-                optEl.classList.add('incorrect');
-            }
-        });
-
-        // Hiển thị phần giải thích
-        document.getElementById(`exp-${qId}`).style.display = 'block';
-
-        // Cập nhật màu nút truy cập nhanh
-        const qaBtn = document.getElementById(`qa-${qId}`);
-        qaBtn.classList.remove('correct-qa', 'incorrect-qa');
-        if (optIdx === q.correct) {
-            qaBtn.classList.add('correct-qa');
-        } else {
-            qaBtn.classList.add('incorrect-qa');
-        }
-
-        updateStats();
-    }
-
-    function updateStats() {
-        let correct = 0;
-        let incorrect = 0;
-        let answeredCount = Object.keys(userAnswers).length;
-
-        for (let qId in userAnswers) {
-            const q = defaultQuestions.find(item => item.id == qId);
-            if (userAnswers[qId] === q.correct) {
-                correct++;
-            } else {
-                incorrect++;
-            }
-        }
-
-        document.getElementById('correct-count').innerText = correct;
-        document.getElementById('incorrect-count').innerText = incorrect;
-        
-        let score = (correct / defaultQuestions.length) * 10;
-        document.getElementById('score-val').innerText = score.toFixed(1);
-    }
-
-    function scrollToQ(qId) {
-        document.getElementById(`q-box-${qId}`).scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function syncFromGoogleSheet() {
-        alert("Để đồng bộ trực tiếp từ Google Sheet vượt qua rào cản bảo mật trình duyệt, bạn có thể xuất bản Sheet thành file CSV hoặc sử dụng Google Apps Script liên kết trực tiếp.");
-    }
-
-    window.onload = renderQuiz;
-</script>
-
-</body>
-</html>
+        { id: 1, title: "XE CƠ GIỚI", question: "Đối tượng bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới theo quy định tại Nghị định số 67/2023/NĐ-CP là gì?", options: ["Tổn thất vật chất của chính chiếc xe cơ giới tham gia giao thông.", "Trách nhiệm dân sự của chủ xe cơ giới đối với người thứ ba, hành khách theo quy định của pháp luật.", "Tính mạng và thân thể của người lái xe và chủ sở hữu phương tiện.", "Hàng hóa chuyên chở trên phương tiện vận tải theo thỏa thuận thương mại."], correct: 1 },
+        { id: 2, title: "XE CƠ GIỚI", question: "Theo Nghị định 67/2023/NĐ-CP, đối với mỗi xe cơ giới, trách nhiệm bồi thường bảo hiểm bắt buộc TNDS của chủ xe cơ giới phát sinh theo bao nhiêu hợp đồng bảo hiểm?", options: ["Chỉ phát sinh theo một hợp đồng bảo hiểm duy nhất.", "Có thể bồi thường cộng dồn theo tất cả các hợp đồng bảo hiểm đã ký kết.", "Phát sinh tối đa theo 02 hợp đồng bảo hiểm nếu mua ở hai DNBH khác nhau.", "Không giới hạn số lượng hợp đồng tùy thuộc vào thỏa thuận của chủ xe."], correct: 0 },
+        { id: 3, title: "XE CƠ GIỚI", question: "Khi nhận được thông báo về tai nạn giao thông, doanh nghiệp bảo hiểm có trách nhiệm hướng dẫn các biện pháp đề phòng thiệt hại và tổ chức giám định tổn thất trong các thời hạn lần lượt là:", options: ["Trong vòng 2 giờ hướng dẫn; trong vòng 12 giờ tổ chức giám định.", "Trong vòng 1 giờ hướng dẫn; trong vòng 24 giờ phối hợp tổ chức thực hiện giám định tổn thất.", "Trong vòng 4 giờ hướng dẫn; trong vòng 48 giờ tổ chức giám định tại hiện trường.", "Trong vòng 30 phút hướng dẫn; trong vòng 72 giờ thực hiện giám định độc lập."], correct: 1 },
+        { id: 4, title: "XE CƠ GIỚI", question: "Mức phí bảo hiểm bắt buộc TNDS cho thời hạn 1 năm (chưa bao gồm thuế GTGT) đối với xe ô tô không kinh doanh vận tải loại dưới 6 chỗ ngồi là bao nhiêu?", options: ["437.000 đồng.", "480.700 đồng.", "756.000 đồng.", "794.000 đồng."], correct: 0 },
+        { id: 5, title: "XE CƠ GIỚI", question: "Mức phí bảo hiểm bắt buộc TNDS 1 năm (chưa gồm VAT) đối với xe ô tô không kinh doanh vận tải từ 6 đến 11 chỗ theo Nghị định 67/2023/NĐ-CP là:", options: ["437.000 đồng.", "756.000 đồng.", "794.000 đồng.", "1.270.000 đồng."], correct: 2 },
+        { id: 6, title: "XE CƠ GIỚI", question: "Phí bảo hiểm bắt buộc TNDS đối với xe ô tô chở người kinh doanh vận tải dưới 6 chỗ theo đăng ký (chưa VAT/năm) là:", options: ["437.000 đồng.", "756.000 đồng.", "929.000 đồng.", "1.080.000 đồng."], correct: 2 },
+        { id: 7, title: "XE CƠ GIỚI", question: "Đối với xe ô tô tải chở hàng dưới 3 tấn, mức phí bảo hiểm bắt buộc TNDS 1 năm (chưa VAT) theo Nghị định 67/2023/NĐ-CP là bao nhiêu?", options: ["853.000 đồng.", "933.000 đồng.", "1.660.000 đồng.", "2.746.000 đồng."], correct: 0 },
+        { id: 8, title: "XE CƠ GIỚI", question: "Phí bảo hiểm bắt buộc TNDS 1 năm (chưa gồm VAT) đối với xe mô tô 2 bánh có dung tích xi lanh từ 50 cc trở lên là:", options: ["55.000 đồng.", "60.000 đồng.", "100.000 đồng.", "290.000 đồng."], correct: 1 },
+        { id: 9, title: "XE CƠ GIỚI", question: "Theo Nghị định 67/2023/NĐ-CP, Quỹ bảo hiểm xe cơ giới được quản lý tập trung tại đâu?", options: ["Cục Quản lý, giám sát bảo hiểm - Bộ Tài chính.", "Ủy ban An toàn giao thông Quốc gia.", "Hiệp hội Bảo hiểm Việt Nam (IAV), có tài khoản riêng tại NHTM và dùng con dấu của Hiệp hội.", "Tổng công ty Cổ phần Tái bảo hiểm Quốc gia Việt Nam (VINARE)."], correct: 2 },
+        { id: 10, title: "XE CƠ GIỚI", question: "Theo quy định phân cấp thẩm quyền của BIC, đối với xe ô tô có tỷ lệ tổn thất (TLTT) từ 300% trở lên, Đơn vị được phép tăng phí bảo hiểm bắt buộc TNDS tối đa là bao nhiêu?", options: ["Tối đa 10% tính trên mức phí Nghị định 67/2023/NĐ-CP.", "Tối đa 15% tính trên mức phí quy định tại Nghị định 67/2023/NĐ-CP.", "Tối đa 25% tính trên mức phí Nghị định 67/2023/NĐ-CP.", "Tối đa 50% tính trên mức phí Nghị định 67/2023/NĐ-CP."], correct: 1 },
+        { id: 11, title: "XE CƠ GIỚI", question: "Khi khách hàng tham gia Điều khoản bổ sung ĐKBS 01, nếu yêu cầu sửa chữa xe tại cơ sở chính hãng thì BIC sẽ bồi thường như thế nào?", options: ["Bồi thường theo chi phí sửa chữa thấp nhất trên thị trường.", "Bồi thường chi phí sửa chữa, thay thế hợp lý theo giá hãng, phù hợp với chủng loại xe được bảo hiểm.", "Bồi thường tối đa 80% chi phí báo giá của hãng xe.", "Chỉ bồi thường nếu cơ sở chính hãng có thỏa thuận hợp tác bảo lãnh trực tiếp với BIC."], correct: 1 },
+        { id: 12, title: "XE CƠ GIỚI", question: "Theo văn bản thẩm quyền khai thác xe cơ giới của BIC, ĐKBS 01 áp dụng cho xe có thời gian sử dụng tối đa là bao lâu?", options: ["Dưới 60 tháng (5 năm).", "Dưới 120 tháng (10 năm).", "Tối đa 240 tháng (20 năm).", "Không giới hạn thời gian sử dụng xe."], correct: 1 },
+        { id: 13, title: "XE CƠ GIỚI", question: "Theo ĐKBS 02, phạm vi bảo hiểm được mở rộng giới hạn trong lãnh thổ các quốc gia nào?", options: ["Tất cả các nước thành viên khối ASEAN.", "Lãnh thổ các nước Lào, Campuchia.", "Lãnh thổ các nước Lào, Campuchia, Thái Lan.", "Lãnh thổ Trung Quốc, Lào, Campuchia."], correct: 2 },
+        { id: 14, title: "XE CƠ GIỚI", question: "Trường hợp tổn thất nào sau đây BỊ LOẠI TRỪ trách nhiệm bảo hiểm theo ĐKBS 02?", options: ["Xe va chạm giao thông khi lưu hành hợp pháp tại Campuchia.", "Xe bị đất đá sạt lở làm bẹp vỏ xe khi lưu thông tại Lào.", "Xe bị mất cắp, mất cướp bộ phận hoặc toàn bộ xe ngoài lãnh thổ Việt Nam; xe thay đổi biển kiểm soát Việt Nam sang nước khác.", "Xe bị lật đổ trên đường đèo tại Lào khi lái xe có GPLX quốc tế hợp lệ."], correct: 2 },
+        { id: 15, title: "XE CƠ GIỚI", question: "Theo quy định thẩm quyền của BIC, điều kiện để được cấp ĐKBS 02 là gì?", options: ["Xe có thời gian sử dụng dưới 120 tháng và đơn bảo hiểm có thời hạn tối thiểu 12 tháng.", "Xe có thời gian sử dụng tối đa 240 tháng và không bị giới hạn thời hạn đơn.", "Chỉ cấp cho xe thuộc sở hữu của doanh nghiệp nhà nước.", "Chỉ cấp khi xe tham gia bảo hiểm trên 3 năm liên tục tại BIC."], correct: 0 },
+        { id: 16, title: "XE CƠ GIỚI", question: "Nội dung cơ bản của Điều khoản bổ sung ĐKBS 03 (Mã BS03/BIC-OTO) là gì?", options: ["Bồi thường thay thế phụ tùng đã qua sử dụng tương đương chất lượng.", "Bồi thường các bộ phận bị hư hỏng cần phải thay mới thuộc trách nhiệm bảo hiểm mà không trừ phần khấu hao sử dụng.", "Chi trả tiền mặt cho chủ xe tự mua phụ tùng thay thế.", "Giảm 50% mức khấu hao phụ tùng thay mới so với quy tắc chuẩn."], correct: 1 },
+        { id: 17, title: "XE CƠ GIỚI", question: "Theo ĐK
