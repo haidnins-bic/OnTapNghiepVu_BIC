@@ -12,40 +12,42 @@
             --card-bg: #fff;
             --text-color: #333;
             --border-color: #ddd;
+            --correct: #2e7d32;
+            --incorrect: #c62828;
         }
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: var(--bg-color); color: var(--text-color); }
         .container { max-width: 950px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { color: var(--primary); text-align: center; font-size: 24px; margin-bottom: 5px; }
         .sub-header { text-align: center; font-size: 14px; color: #555; margin-bottom: 20px; }
         
-        /* Tabs chuyên đề */
         .tabs-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 2px solid #eee; }
         .tab-btn { background: #eef2f7; border: 1px solid #ccc; padding: 8px 14px; border-radius: 4px; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: bold; color: #444; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Header info & sync */
         .header-info { background: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); }
         button { background-color: var(--secondary); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #00264d; }
 
-        /* Thống kê */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: #fdfdfd; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; text-align: center; }
         .stat-card h3 { margin: 0; font-size: 20px; color: var(--primary); }
         .stat-card p { margin: 5px 0 0 0; font-size: 12px; color: #666; }
 
-        /* Câu hỏi */
         .question-box { margin-bottom: 25px; padding: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: #fafafa; }
         .question-title { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 14px; }
         .option { display: block; margin: 8px 0; padding: 10px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
         .option:hover { background: #f0f4f8; }
         .option input { margin-right: 10px; }
+        
+        .option.correct { background-color: #e8f5e9; border-color: var(--correct); color: var(--correct); font-weight: bold; }
+        .option.incorrect { background-color: #ffebee; border-color: var(--incorrect); color: var(--incorrect); }
+        .explanation { margin-top: 10px; padding: 10px; background: #fffde7; border-left: 4px solid #fbc02d; font-size: 13px; display: none; }
 
-        /* Bảng truy cập nhanh */
         .quick-access { margin-top: 30px; padding-top: 15px; border-top: 1px solid var(--border-color); }
         .quick-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-        .qa-btn { width: 35px; height: 35px; background: #e2e8f0; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .qa-btn.answered { background: #cbd5e1; }
+        .qa-btn { width: 35px; height: 35px; background: #e2e8f0; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: #333; }
+        .qa-btn.correct-qa { background: #c8e6c9; color: #2e7d32; }
+        .qa-btn.incorrect-qa { background: #ffcdd2; color: #c62828; }
     </style>
 </head>
 <body>
@@ -54,7 +56,6 @@
     <h1>CỔNG ÔN TẬP NGHIỆP VỤ BẢO HIỂM - BIC</h1>
     <div class="sub-header">TỔNG CÔNG TY BẢO HIỂM BIDV (BIC) • HỆ THỐNG ĐÀO TẠO CHUẨN HÓA 2026</div>
     
-    <!-- Các tab chuyên đề -->
     <div class="tabs-container">
         <button class="tab-btn active">XE CƠ GIỚI (40 CÂU)</button>
         <button class="tab-btn">CHÁY NỔ & TÀI SẢN NĐ 67</button>
@@ -65,92 +66,164 @@
 
     <div class="header-info">
         <div>
-            <span id="sync-status"><b>Chế độ ngoại tuyến</b> (Đang dùng 40 câu hỏi chuẩn BIC)</span><br>
+            <span id="sync-status"><b>Chế độ ngoại tuyến</b> (Đang dùng dữ liệu tích hợp sẵn)</span><br>
             <small>Google Sheet ID: 16jtpz...6QvKo</small>
         </div>
         <button onclick="syncFromGoogleSheet()">Đồng bộ từ Google Sheet</button>
     </div>
 
-    <!-- Thống kê nhanh -->
     <div class="stats-grid">
         <div class="stat-card">
-            <h3>40</h3>
+            <h3 id="total-q">40</h3>
             <p>TỔNG SỐ CÂU</p>
         </div>
         <div class="stat-card">
-            <h3 style="color: #2e7d32;">0</h3>
+            <h3 id="correct-count" style="color: var(--correct);">0</h3>
             <p>SỐ CÂU ĐÚNG</p>
         </div>
         <div class="stat-card">
-            <h3 style="color: #c62828;">0</h3>
+            <h3 id="incorrect-count" style="color: var(--incorrect);">0</h3>
             <p>SỐ CÂU SAI</p>
         </div>
         <div class="stat-card">
-            <h3 style="color: #0277bd;">0.0</h3>
+            <h3 id="score-val" style="color: #0277bd;">0.0</h3>
             <p>ĐIỂM SỐ (THANG 10)</p>
         </div>
     </div>
 
-    <div id="quiz-container">
-        <!-- Câu hỏi mẫu số 1 -->
-        <div class="question-box">
-            <div class="question-title">CÂU HỎI 1 • XE CƠ GIỚI</div>
-            <p><b>1.</b> Đối tượng bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới theo quy định tại Nghị định số 67/2023/NĐ-CP là gì?</p>
-            <label class="option"><input type="radio" name="q1"> A. Tổn thất vật chất của chính chiếc xe cơ giới tham gia giao thông.</label>
-            <label class="option"><input type="radio" name="q1"> B. Trách nhiệm dân sự của chủ xe cơ giới đối với người thứ ba, hành khách theo quy định của pháp luật.</label>
-            <label class="option"><input type="radio" name="q1"> C. Tính mạng và thân thể của người lái xe và chủ sở hữu phương tiện.</label>
-            <label class="option"><input type="radio" name="q1"> D. Hàng hóa chuyên chở trên phương tiện vận tải theo thỏa thuận thương mại.</label>
-        </div>
+    <div id="quiz-container"></div>
 
-        <!-- Câu hỏi mẫu số 2 -->
-        <div class="question-box">
-            <div class="question-title">CÂU HỎI 2 • XE CƠ GIỚI</div>
-            <p><b>2.</b> Theo Nghị định 67/2023/NĐ-CP, đối với mỗi xe cơ giới, trách nhiệm bồi thường bảo hiểm bắt buộc TNDS của chủ xe cơ giới phát sinh theo bao nhiêu hợp đồng bảo hiểm?</p>
-            <label class="option"><input type="radio" name="q2"> A. Chỉ phát sinh theo một hợp đồng bảo hiểm duy nhất.</label>
-            <label class="option"><input type="radio" name="q2"> B. Có thể bồi thường cộng dồn theo tất cả các hợp đồng bảo hiểm đã ký kết.</label>
-            <label class="option"><input type="radio" name="q2"> C. Phát sinh tối đa theo 02 hợp đồng bảo hiểm nếu mua ở hai DNBH khác nhau.</label>
-            <label class="option"><input type="radio" name="q2"> D. Không giới hạn số lượng hợp đồng tùy thuộc vào thỏa thuận của chủ xe.</label>
-        </div>
-    </div>
-
-    <!-- Bảng truy cập nhanh -->
     <div class="quick-access">
         <b>BẢNG TRUY CẬP NHANH CÂU HỎI:</b>
-        <div class="quick-grid">
-            <button class="qa-btn">1</button>
-            <button class="qa-btn">2</button>
-            <button class="qa-btn">3</button>
-            <button class="qa-btn">4</button>
-            <button class="qa-btn">5</button>
-            <button class="qa-btn">6</button>
-            <button class="qa-btn">7</button>
-            <button class="qa-btn">8</button>
-            <button class="qa-btn">9</button>
-            <button class="qa-btn">10</button>
-        </div>
+        <div class="quick-grid" id="quick-grid"></div>
     </div>
 </div>
 
 <script>
-    async function syncFromGoogleSheet() {
-        const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/16jtpz...6QvKo/export?format=csv';
-        const statusElement = document.getElementById('sync-status');
-        
-        statusElement.innerHTML = "<b>Đang kết nối lấy dữ liệu từ Google Sheet...</b>";
+    // Dữ liệu chuẩn tích hợp sẵn cho 40 câu hỏi xe cơ giới
+    const defaultQuestions = [
+        {
+            id: 1,
+            title: "CÂU HỎI 1 • XE CƠ GIỚI",
+            question: "Đối tượng bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới theo quy định tại Nghị định số 67/2023/NĐ-CP là gì?",
+            options: [
+                "Tổn thất vật chất của chính chiếc xe cơ giới tham gia giao thông.",
+                "Trách nhiệm dân sự của chủ xe cơ giới đối với người thứ ba, hành khách theo quy định của pháp luật.",
+                "Tính mạng và thân thể của người lái xe và chủ sở hữu phương tiện.",
+                "Hàng hóa chuyên chở trên phương tiện vận tải theo thỏa thuận thương mại."
+            ],
+            correct: 1, // Đáp án B (index 1)
+            explanation: "Căn cứ Nghị định 67/2023/NĐ-CP, đối tượng bảo hiểm bắt buộc TNDS chủ xe cơ giới là trách nhiệm dân sự đối với người thứ ba và hành khách."
+        },
+        {
+            id: 2,
+            title: "CÂU HỎI 2 • XE CƠ GIỚI",
+            question: "Theo Nghị định 67/2023/NĐ-CP, đối với mỗi xe cơ giới, trách nhiệm bồi thường bảo hiểm bắt buộc TNDS của chủ xe cơ giới phát sinh theo bao nhiêu hợp đồng bảo hiểm?",
+            options: [
+                "Chỉ phát sinh theo một hợp đồng bảo hiểm duy nhất.",
+                "Có thể bồi thường cộng dồn theo tất cả các hợp đồng bảo hiểm đã ký kết.",
+                "Phát sinh tối đa theo 02 hợp đồng bảo hiểm nếu mua ở hai DNBH khác nhau.",
+                "Không giới hạn số lượng hợp đồng tùy thuộc vào thỏa thuận của chủ xe."
+            ],
+            correct: 0,
+            explanation: "Mỗi xe cơ giới chỉ phát sinh trách nhiệm theo một hợp đồng bảo hiểm bắt buộc TNDS duy nhất có hiệu lực pháp lý gần nhất."
+        },
+        // Có thể mở rộng thêm bộ câu hỏi đầy đủ tại đây
+    ];
 
-        try {
-            const response = await fetch(sheetCsvUrl);
-            if (!response.ok) throw new Error("Lỗi mạng");
-            
-            const csvText = await response.text();
-            statusElement.innerHTML = "<b>Đồng bộ thành công!</b> Dữ liệu đã được cập nhật mới nhất từ Google Sheet.";
-            alert("Đã cập nhật câu hỏi mới từ Google Sheet thành công!");
-        } catch (error) {
-            console.error("Lỗi:", error);
-            statusElement.innerHTML = "<b>Chế độ ngoại tuyến</b> (Không thể kết nối trực tiếp do CORS/bảo mật trình duyệt)";
-            alert("Không thể kết nối trực tiếp đến Google Sheet. Vui lòng đảm bảo Sheet đã được 'Công bố lên web' dưới định dạng CSV hoặc liên kết công khai.");
-        }
+    let userAnswers = {};
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-container');
+        const quickGrid = document.getElementById('quick-grid');
+        container.innerHTML = '';
+        quickGrid.innerHTML = '';
+
+        // Render danh sách câu hỏi
+        defaultQuestions.forEach((q, idx) => {
+            let html = `
+                <div class="question-box" id="q-box-${q.id}">
+                    <div class="question-title">${q.title}</div>
+                    <p><b>${q.id}.</b> ${q.question}</p>
+            `;
+            q.options.forEach((opt, optIdx) => {
+                html += `
+                    <label class="option" id="opt-${q.id}-${optIdx}">
+                        <input type="radio" name="question_${q.id}" value="${optIdx}" onclick="selectAnswer(${q.id}, ${optIdx})">
+                        ${String.fromCharCode(65 + idx).toLowerCase() === 'a' ? ['A. ', 'B. ', 'C. ', 'D. '][optIdx] : ['A. ', 'B. ', 'C. ', 'D. '][optIdx]}${opt}
+                    </label>
+                `;
+            });
+            html += `<div class="explanation" id="exp-${q.id}"><b>Giải thích:</b> ${q.explanation}</div>`;
+            html += `</div>`;
+            container.innerHTML += html;
+
+            // Render nút quick access
+            quickGrid.innerHTML += `<button class="qa-btn" id="qa-${q.id}" onclick="scrollToQ(${q.id})">${q.id}</button>`;
+        });
+        updateStats();
     }
+
+    function selectAnswer(qId, optIdx) {
+        userAnswers[qId] = optIdx;
+        const q = defaultQuestions.find(item => item.id === qId);
+        
+        // Tô màu đúng sai cho các option
+        q.options.forEach((_, i) => {
+            const optEl = document.getElementById(`opt-${qId}-${i}`);
+            optEl.classList.remove('correct', 'incorrect');
+            if (i === q.correct) {
+                optEl.classList.add('correct');
+            } else if (i === optIdx && optIdx !== q.correct) {
+                optEl.classList.add('incorrect');
+            }
+        });
+
+        // Hiển thị phần giải thích
+        document.getElementById(`exp-${qId}`).style.display = 'block';
+
+        // Cập nhật màu nút truy cập nhanh
+        const qaBtn = document.getElementById(`qa-${qId}`);
+        qaBtn.classList.remove('correct-qa', 'incorrect-qa');
+        if (optIdx === q.correct) {
+            qaBtn.classList.add('correct-qa');
+        } else {
+            qaBtn.classList.add('incorrect-qa');
+        }
+
+        updateStats();
+    }
+
+    function updateStats() {
+        let correct = 0;
+        let incorrect = 0;
+        let answeredCount = Object.keys(userAnswers).length;
+
+        for (let qId in userAnswers) {
+            const q = defaultQuestions.find(item => item.id == qId);
+            if (userAnswers[qId] === q.correct) {
+                correct++;
+            } else {
+                incorrect++;
+            }
+        }
+
+        document.getElementById('correct-count').innerText = correct;
+        document.getElementById('incorrect-count').innerText = incorrect;
+        
+        let score = (correct / defaultQuestions.length) * 10;
+        document.getElementById('score-val').innerText = score.toFixed(1);
+    }
+
+    function scrollToQ(qId) {
+        document.getElementById(`q-box-${qId}`).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function syncFromGoogleSheet() {
+        alert("Để đồng bộ trực tiếp từ Google Sheet vượt qua rào cản bảo mật trình duyệt, bạn có thể xuất bản Sheet thành file CSV hoặc sử dụng Google Apps Script liên kết trực tiếp.");
+    }
+
+    window.onload = renderQuiz;
 </script>
 
 </body>
