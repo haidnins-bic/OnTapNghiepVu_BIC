@@ -11,15 +11,61 @@
         }
         body { font-family: Arial, sans-serif; margin: 0; padding: 15px; background: var(--bg); color: #333; }
         .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: var(--primary); text-align: center; margin-bottom: 5px; font-size: 22px; }
+        h1 { color: var(--primary); text-align: center; margin-bottom: 5px; font-size: 22px; text-transform: uppercase; }
         .sub-title { text-align: center; color: #666; font-size: 13px; margin-bottom: 20px; }
         
-        /* Bảng điều khiển */
-        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .tabs { display: flex; gap: 8px; overflow-x: auto; flex: 1; padding-bottom: 5px; }
-        .tab-btn { background: #eef2f7; border: 1px solid #ccc; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; white-space: nowrap; }
-        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .action-btns button { background: var(--secondary); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; margin-left: 5px; margin-bottom: 5px; }
+        /* --- KHU VỰC NÚT CHỨC NĂNG --- */
+        .top-actions { 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 12px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap;
+        }
+        .top-actions button, .quick-actions button { 
+            background: var(--secondary); 
+            color: #fff; 
+            border: none; 
+            padding: 10px 18px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 13px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        .top-actions button:hover, .quick-actions button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        
+        .quick-actions { display: flex; gap: 10px; margin: 10px 0; }
+
+        /* --- KHU VỰC TAB CHUYÊN ĐỀ (Dạng bìa hồ sơ) --- */
+        .topic-tabs { 
+            display: flex; 
+            gap: 4px; 
+            overflow-x: auto; 
+            margin-bottom: 25px; 
+            border-bottom: 3px solid var(--primary); 
+        }
+        .topic-tabs::-webkit-scrollbar { height: 6px; }
+        .topic-tabs::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        
+        .tab-btn { 
+            background: #e2e8f0; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 8px 8px 0 0; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 14px; 
+            color: #475569; 
+            white-space: nowrap; 
+            transition: 0.2s; 
+        }
+        .tab-btn:hover { background: #cbd5e1; color: #0f172a; }
+        .tab-btn.active { 
+            background: var(--primary); 
+            color: #fff; 
+        }
         
         /* Thống kê & Timer */
         .dashboard { display: flex; gap: 10px; margin-bottom: 20px; }
@@ -75,16 +121,17 @@
     <h1>CỔNG ÔN TẬP NGHIỆP VỤ BẢO HIỂM - BIC</h1>
     <div class="sub-title">Hệ thống câu hỏi ôn tập nghiệp vụ nội bộ theo quy định & biểu phí hiện hành</div>
 
-    <div class="controls">
-        <div class="tabs" id="tabs-container">
-            <!-- Tabs render tự động từ Google Sheet -->
-        </div>
-        <div class="action-btns">
-            <button onclick="fetchData(true)">🔄 Đồng bộ Sheet</button>
-            <button onclick="startMockExam()" id="btn-exam" style="background: #e65100;">⏱ Thi thử</button>
-            <button onclick="submitExam()" id="btn-submit" style="display: none; background: #2e7d32;">✅ Nộp bài</button>
-            <button onclick="resetProgress()" style="background: #d32f2f;">🗑 Làm lại từ đầu</button>
-        </div>
+    <!-- TẦNG 1: CÁC NÚT CHỨC NĂNG ĐIỀU KHIỂN -->
+    <div class="top-actions">
+        <button onclick="fetchData(true)" style="background: #1976d2;">🔄 Đồng bộ Sheet</button>
+        <button onclick="startMockExam()" id="btn-exam" style="background: #e65100;">⏱ Thi thử</button>
+        <button onclick="submitExam()" id="btn-submit" style="display: none; background: #2e7d32;">✅ Nộp bài</button>
+        <button onclick="resetProgress()" style="background: #d32f2f;">🗑 Làm lại từ đầu</button>
+    </div>
+
+    <!-- TẦNG 2: THANH TAB CHUYÊN ĐỀ DÀI TRÀN MÀN HÌNH -->
+    <div class="topic-tabs" id="tabs-container">
+        <!-- Tabs render tự động từ Google Sheet sẽ nằm ở đây -->
     </div>
 
     <!-- Đồng hồ ghim nổi -->
@@ -118,7 +165,7 @@
 
     <div class="quick-nav">
         <b>BẢNG TRUY CẬP NHANH:</b>
-        <div class="action-btns" style="margin-top: 10px; margin-bottom: 10px;">
+        <div class="quick-actions">
             <button onclick="shuffleQuestions()" style="background: #607d8b;">🔀 Đảo câu hỏi</button>
             <button onclick="resetProgress()" style="background: #d32f2f;">🗑 Làm lại từ đầu</button>
         </div>
@@ -127,7 +174,7 @@
 </div>
 
 <script>
-    // URL Lấy dữ liệu từ Google Apps Script của bạn
+    // URL Lấy dữ liệu từ Google Apps Script của bạn (Đúng bản gốc)
     const API_URL = 'https://script.google.com/macros/s/AKfycbwLFmc6fEmJppxxxdVKtg-txlZwYEnb8khk4fNi_9v6xTlrErjXzxbQqa74rs2RS2VF0A/exec';
     
     // Ánh xạ đáp án từ A, B, C, D sang index 0, 1, 2, 3
@@ -142,7 +189,7 @@
     let timerInterval = null;
     let examTimeLeft = 0;
 
-    // LOCAL STORAGE: Lưu trữ tiến trình
+    // LOCAL STORAGE: Lưu trữ tiến trình bằng tên gốc (bic_progress)
     let userProgress = JSON.parse(localStorage.getItem('bic_progress')) || {};
 
     // Khởi chạy khi load trang
@@ -151,7 +198,7 @@
     async function fetchData(forceSync) {
         document.getElementById('content-container').innerHTML = '<div class="loader" id="loader">Đang tải dữ liệu từ Google Sheets...</div>';
         
-        // Nếu không ép đồng bộ (forceSync) và có sẵn trong Local Storage thì dùng luôn cho nhanh
+        // Cache data bằng biến gốc
         if (!forceSync && localStorage.getItem('bic_db')) {
             dbData = JSON.parse(localStorage.getItem('bic_db'));
             initUI();
@@ -161,7 +208,7 @@
         try {
             const response = await fetch(API_URL);
             dbData = await response.json();
-            localStorage.setItem('bic_db', JSON.stringify(dbData)); // Caching
+            localStorage.setItem('bic_db', JSON.stringify(dbData)); 
             initUI();
             if(forceSync) alert("Đã cập nhật dữ liệu mới nhất từ Google Sheets!");
         } catch (err) {
@@ -175,7 +222,7 @@
         let firstTab = true;
 
         for (let topic in dbData) {
-            if (!userProgress[topic]) userProgress[topic] = {}; // Khởi tạo progress cho sheet mới
+            if (!userProgress[topic]) userProgress[topic] = {}; 
 
             const btn = document.createElement('button');
             btn.className = `tab-btn ${firstTab ? 'active' : ''}`;
@@ -264,7 +311,7 @@
 
     function selectOption(qId, selectedIdx, correctIdx) {
         if (!userProgress[currentTopic]) userProgress[currentTopic] = {};
-        userProgress[currentTopic][qId] = selectedIdx; // Lưu lựa chọn
+        userProgress[currentTopic][qId] = selectedIdx; 
 
         if (isMockExam) {
             // Chế độ thi thử: Đánh dấu xanh lơ, không hiện đúng sai
@@ -273,8 +320,8 @@
             document.getElementById(`lbl-${qId}-${selectedIdx}`).classList.add('selected');
             document.getElementById(`nav-${qId}`).className = 'nav-btn nav-selected';
         } else {
-            // Chế độ ôn tập: Chấm ngay lập tức
-            localStorage.setItem('bic_progress', JSON.stringify(userProgress)); // Lưu tiến trình
+            // Chế độ ôn tập: Chấm ngay lập tức và lưu vào biến gốc
+            localStorage.setItem('bic_progress', JSON.stringify(userProgress)); 
             
             const qObj = currentQuestions.find(x => x.id == qId);
             
@@ -282,7 +329,7 @@
             qObj.options.forEach((_, i) => {
                 const lbl = document.getElementById(`lbl-${qId}-${i}`);
                 lbl.querySelector('input').disabled = true;
-                lbl.className = 'opt-label'; // reset
+                lbl.className = 'opt-label'; 
                 if (i === correctIdx) lbl.classList.add('correct');
                 else if (i === selectedIdx) lbl.classList.add('incorrect');
             });
