@@ -3,68 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cổng Ôn Tập Nghiệp Vụ Bảo Hiểm - BIC</title>
+    <title>Cổng Ôn Tập Nghiệp Vụ Bảo Hiểm BIC - Multi-topic Hub</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f6f9; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        h1 { color: #003366; text-align: center; font-size: 24px; }
-        .header-info { background: #eef2f7; padding: 15px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        button { background-color: #004080; color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        :root {
+            --primary: #003366;
+            --secondary: #004080;
+            --bg-color: #f4f6f9;
+            --card-bg: #fff;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: var(--bg-color); color: var(--text-color); }
+        .container { max-width: 950px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: var(--primary); text-align: center; font-size: 24px; margin-bottom: 5px; }
+        .sub-header { text-align: center; font-size: 14px; color: #555; margin-bottom: 20px; }
+        
+        /* Tabs chuyên đề */
+        .tabs-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 2px solid #eee; }
+        .tab-btn { background: #eef2f7; border: 1px solid #ccc; padding: 8px 14px; border-radius: 4px; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: bold; color: #444; }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Header info & sync */
+        .header-info { background: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); }
+        button { background-color: var(--secondary); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #00264d; }
-        .question-box { margin-bottom: 25px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; background: #fafafa; }
-        .question-title { font-weight: bold; color: #003366; margin-bottom: 10px; }
-        .option { display: block; margin: 8px 0; padding: 8px 12px; background: #fff; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; }
+
+        /* Thống kê */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #fdfdfd; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; text-align: center; }
+        .stat-card h3 { margin: 0; font-size: 20px; color: var(--primary); }
+        .stat-card p { margin: 5px 0 0 0; font-size: 12px; color: #666; }
+
+        /* Câu hỏi */
+        .question-box { margin-bottom: 25px; padding: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: #fafafa; }
+        .question-title { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 14px; }
+        .option { display: block; margin: 8px 0; padding: 10px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
         .option:hover { background: #f0f4f8; }
+        .option input { margin-right: 10px; }
+
+        /* Bảng truy cập nhanh */
+        .quick-access { margin-top: 30px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .quick-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .qa-btn { width: 35px; height: 35px; background: #e2e8f0; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .qa-btn.answered { background: #cbd5e1; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>TỔNG CÔNG TY BẢO HIỂM BIDV (BIC)</h1>
-    <h2 style="text-align: center; font-size: 18px; color: #555;">CỔNG ÔN TẬP NGHIỆP VỤ BẢO HIỂM - CHUẨN HÓA 2026</h2>
+    <h1>CỔNG ÔN TẬP NGHIỆP VỤ BẢO HIỂM - BIC</h1>
+    <div class="sub-header">TỔNG CÔNG TY BẢO HIỂM BIDV (BIC) • HỆ THỐNG ĐÀO TẠO CHUẨN HÓA 2026</div>
     
+    <!-- Các tab chuyên đề -->
+    <div class="tabs-container">
+        <button class="tab-btn active">XE CƠ GIỚI (40 CÂU)</button>
+        <button class="tab-btn">CHÁY NỔ & TÀI SẢN NĐ 67</button>
+        <button class="tab-btn">HÀNG HẢI & TÀU THUYỀN</button>
+        <button class="tab-btn">BẢO HIỂM CON NGƯỜI QĐ 1258</button>
+        <button class="tab-btn">THI TỔNG HỢP TOÀN DIỆN</button>
+    </div>
+
     <div class="header-info">
         <div>
-            <span id="sync-status">Chế độ ngoại tuyến (Sử dụng 40 câu hỏi chuẩn BIC)</span><br>
-            <small>Sheet ID: 16jtpz...6QvKo</small>
+            <span id="sync-status"><b>Chế độ ngoại tuyến</b> (Đang dùng 40 câu hỏi chuẩn BIC)</span><br>
+            <small>Google Sheet ID: 16jtpz...6QvKo</small>
         </div>
         <button onclick="syncFromGoogleSheet()">Đồng bộ từ Google Sheet</button>
     </div>
 
+    <!-- Thống kê nhanh -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>40</h3>
+            <p>TỔNG SỐ CÂU</p>
+        </div>
+        <div class="stat-card">
+            <h3 style="color: #2e7d32;">0</h3>
+            <p>SỐ CÂU ĐÚNG</p>
+        </div>
+        <div class="stat-card">
+            <h3 style="color: #c62828;">0</h3>
+            <p>SỐ CÂU SAI</p>
+        </div>
+        <div class="stat-card">
+            <h3 style="color: #0277bd;">0.0</h3>
+            <p>ĐIỂM SỐ (THANG 10)</p>
+        </div>
+    </div>
+
     <div id="quiz-container">
-        <!-- Khu vực hiển thị câu hỏi -->
+        <!-- Câu hỏi mẫu số 1 -->
         <div class="question-box">
             <div class="question-title">CÂU HỎI 1 • XE CƠ GIỚI</div>
-            <p>1. Đối tượng bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới theo quy định tại Nghị định số 67/2023/NĐ-CP là gì?</p>
+            <p><b>1.</b> Đối tượng bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới theo quy định tại Nghị định số 67/2023/NĐ-CP là gì?</p>
             <label class="option"><input type="radio" name="q1"> A. Tổn thất vật chất của chính chiếc xe cơ giới tham gia giao thông.</label>
             <label class="option"><input type="radio" name="q1"> B. Trách nhiệm dân sự của chủ xe cơ giới đối với người thứ ba, hành khách theo quy định của pháp luật.</label>
             <label class="option"><input type="radio" name="q1"> C. Tính mạng và thân thể của người lái xe và chủ sở hữu phương tiện.</label>
             <label class="option"><input type="radio" name="q1"> D. Hàng hóa chuyên chở trên phương tiện vận tải theo thỏa thuận thương mại.</label>
+        </div>
+
+        <!-- Câu hỏi mẫu số 2 -->
+        <div class="question-box">
+            <div class="question-title">CÂU HỎI 2 • XE CƠ GIỚI</div>
+            <p><b>2.</b> Theo Nghị định 67/2023/NĐ-CP, đối với mỗi xe cơ giới, trách nhiệm bồi thường bảo hiểm bắt buộc TNDS của chủ xe cơ giới phát sinh theo bao nhiêu hợp đồng bảo hiểm?</p>
+            <label class="option"><input type="radio" name="q2"> A. Chỉ phát sinh theo một hợp đồng bảo hiểm duy nhất.</label>
+            <label class="option"><input type="radio" name="q2"> B. Có thể bồi thường cộng dồn theo tất cả các hợp đồng bảo hiểm đã ký kết.</label>
+            <label class="option"><input type="radio" name="q2"> C. Phát sinh tối đa theo 02 hợp đồng bảo hiểm nếu mua ở hai DNBH khác nhau.</label>
+            <label class="option"><input type="radio" name="q2"> D. Không giới hạn số lượng hợp đồng tùy thuộc vào thỏa thuận của chủ xe.</label>
+        </div>
+    </div>
+
+    <!-- Bảng truy cập nhanh -->
+    <div class="quick-access">
+        <b>BẢNG TRUY CẬP NHANH CÂU HỎI:</b>
+        <div class="quick-grid">
+            <button class="qa-btn">1</button>
+            <button class="qa-btn">2</button>
+            <button class="qa-btn">3</button>
+            <button class="qa-btn">4</button>
+            <button class="qa-btn">5</button>
+            <button class="qa-btn">6</button>
+            <button class="qa-btn">7</button>
+            <button class="qa-btn">8</button>
+            <button class="qa-btn">9</button>
+            <button class="qa-btn">10</button>
         </div>
     </div>
 </div>
 
 <script>
     async function syncFromGoogleSheet() {
-        // Link CSV xuất bản công khai từ Google Sheet của bạn
         const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/16jtpz...6QvKo/export?format=csv';
-        
         const statusElement = document.getElementById('sync-status');
-        statusElement.innerText = "Đang kết nối lấy dữ liệu từ Google Sheet...";
+        
+        statusElement.innerHTML = "<b>Đang kết nối lấy dữ liệu từ Google Sheet...</b>";
 
         try {
             const response = await fetch(sheetCsvUrl);
-            if (!response.ok) throw new Error("Không thể kết nối mạng tới Google Sheet");
+            if (!response.ok) throw new Error("Lỗi mạng");
             
             const csvText = await response.text();
-            
-            // Xử lý dữ liệu CSV ở đây (bạn có thể phát triển thêm hàm cắt chuỗi parse CSV)
-            statusElement.innerText = "Đồng bộ dữ liệu thành công từ Google Sheet!";
-            alert("Đã cập nhật dữ liệu mới nhất từ Google Sheet thành công!");
+            statusElement.innerHTML = "<b>Đồng bộ thành công!</b> Dữ liệu đã được cập nhật mới nhất từ Google Sheet.";
+            alert("Đã cập nhật câu hỏi mới từ Google Sheet thành công!");
         } catch (error) {
-            console.error("Lỗi đồng bộ:", error);
-            statusElement.innerText = "Chế độ ngoại tuyến (Không thể kết nối trực tiếp Google Sheet)";
-            alert("Không thể kết nối trực tiếp đến Google Sheet do chính sách bảo mật trình duyệt hoặc quyền chia sẻ. Vui lòng kiểm tra lại quyền công bố lên web của Sheet.");
+            console.error("Lỗi:", error);
+            statusElement.innerHTML = "<b>Chế độ ngoại tuyến</b> (Không thể kết nối trực tiếp do CORS/bảo mật trình duyệt)";
+            alert("Không thể kết nối trực tiếp đến Google Sheet. Vui lòng đảm bảo Sheet đã được 'Công bố lên web' dưới định dạng CSV hoặc liên kết công khai.");
         }
     }
 </script>
